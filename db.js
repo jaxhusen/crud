@@ -11,36 +11,40 @@ db.run(`
         id INTEGER PRIMARY KEY,
         username TEXT,
         hashedPassword TEXT,
+        name TEXT,
+        motto TEXT,
         CONSTRAINT uniqueUsername UNIQUE(username)
     )
-    `),
+    `)
 
-    (`
+db.run(`
     CREATE TABLE IF NOT EXISTS cars (
         id INTEGER PRIMARY KEY,
         make TEXT,
-        model TEXT,
+        model TEXT
     )
 `)
 
 
 // save accounts/cars in database
-module.exports.registerUser = (username, hashedPassword, callback) => {
+module.exports.registerUser = (username, hashedPassword, name, motto, callback) => {
     const query = `
     INSERT INTO accounts
-        (username, hashedPassword)
+        (username, hashedPassword, name, motto)
     VALUES
-        (?, ?)
+        (?, ?, ?, ?)
         `
 
     const values = [
         username,
-        hashedPassword
+        hashedPassword,
+        name,
+        motto
     ]
     db.run(query, values, callback)
 }
 
-module.exports.registerCars = (make, model, callback) => {
+ module.exports.registerCars = (make, model, callback) => {
     const query = `
     INSERT INTO cars
     (make, model)
@@ -53,10 +57,31 @@ module.exports.registerCars = (make, model, callback) => {
         model
     ]
     db.run(query, values, callback)
+}  
+
+
+
+
+
+//get all users from db
+exports.getAllUsers = function (callback){
+    const query = `
+    SELECT * FROM accounts;
+    `
+    db.all(query, callback)
 }
 
 
-//get accounts/cars from database
+//get user from database
+exports.getUserById = function (id, callback) {
+    const query = `
+    SELECT * FROM accounts WHERE id = ?`
+    const values = [id]
+
+    db.get(query, values, callback)
+}
+
+//get account from database LOGIN
 exports.getAccountByUsername = function (username, callback) {
     const query = `
     SELECT * FROM accounts WHERE username = ?`
@@ -66,34 +91,20 @@ exports.getAccountByUsername = function (username, callback) {
 }
 
 
-exports.getCars = function (id, callback) {
+
+//hämta flera cars
+ exports.getAllCars = function (callback) {
+    const query = `
+    SELECT * FROM cars`;
+
+    db.all(query, callback)
+}  
+
+//get car from database
+exports.getCarById = function (id, callback) {
     const query = `
     SELECT * FROM cars WHERE id = ?`
     const values = [id]
 
     db.get(query, values, callback)
 }
-
-
-
-
-
-/* 
-
-db.run(`
-    CREATE TABLE IF NOT EXISTS accounts (
-        id INTEGER PRIMARY KEY,
-        username TEXT,
-        hashedPassword TEXT,
-        CONSTRAINT uniqueUsername UNIQUE(username)
-    )
-`),
-
-(`
-CREATE TABLE IF NOT EXISTS cars (
-    id INTEGER PRIMARY KEY,
-    make TEXT,
-    model TEXT,
-    )
-`)
-*/

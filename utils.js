@@ -40,6 +40,3 @@ module.exports.verifyJWT = (token) => {
 module.exports.decodeJWT = (token) => {
     return jwt.decode(token, JWT_SECRET)
 }  
-
-
-/* module.exports.getAllUsers =  */

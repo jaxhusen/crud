@@ -47,9 +47,9 @@ module.exports.registerUser = (username, hashedPassword, name, motto, callback) 
  module.exports.registerCars = (make, model, callback) => {
     const query = `
     INSERT INTO cars
-    (make, model)
+        (make, model)
     VALUES
-    (?, ?)
+        (?, ?)
     `
 
     const values = [
